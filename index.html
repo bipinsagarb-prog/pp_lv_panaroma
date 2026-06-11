@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Low Voltage Portfolio Panorama</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Breadcrumb trail (Prompt 5) -->
+<nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
+  <ol id="breadcrumbList"></ol>
+</nav>
+
+<!-- Global viewport: holds full-screen slides -->
+<main class="viewport" id="viewport">
+
+  <!-- ============ SLIDE 1 — TITLE ============ -->
+  <section class="slide slide--title is-active" id="slide-title" data-slide="title">
+    <div class="title-bg" aria-hidden="true">
+      <div class="title-bg__grid"></div>
+      <div class="title-bg__glow"></div>
+    </div>
+    <div class="title-content">
+      <p class="eyebrow">Schneider Electric · EcoStruxure Power</p>
+      <h1 class="title-content__h1">Low Voltage portfolio<br><span>Panorama</span></h1>
+      <p class="title-content__sub">An interactive tour — from market segments to the connected components inside a PrismaSeT P switchboard.</p>
+      <button class="btn btn--explore" id="exploreBtn">
+        Explore Portfolio
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <footer class="slide-footer">©2026 Schneider Electric. All Rights Reserved</footer>
+  </section>
+
+  <!-- ============ SLIDE 2 — MARKET SEGMENTS ============ -->
+  <section class="slide slide--segments" id="slide-segments" data-slide="segments">
+    <header class="slide-head">
+      <h2>Low Voltage market segments</h2>
+      <p>From residential to large critical industries — pick a switchboard range. <strong>PrismaSeT P is clickable.</strong></p>
+    </header>
+
+    <div class="segments-grid" role="list">
+
+      <article class="seg-card" role="listitem" style="--seg:1">
+        <div class="seg-card__amp">≤ 63A</div>
+        <h3 class="seg-card__range">PrismaSeT XS · Resi9</h3>
+        <ul class="seg-card__apps">
+          <li>Single-family home</li>
+          <li>Multi-dwelling</li>
+        </ul>
+        <div class="seg-card__band">Terminal distribution</div>
+      </article>
+
+      <article class="seg-card" role="listitem" style="--seg:2">
+        <div class="seg-card__amp">≤ 125A</div>
+        <h3 class="seg-card__range">PrismaSeT XS, S, G</h3>
+        <ul class="seg-card__apps">
+          <li>CIB XS Light</li>
+        </ul>
+        <div class="seg-card__band">Terminal distribution</div>
+      </article>
+
+      <article class="seg-card" role="listitem" style="--seg:3">
+        <div class="seg-card__amp">≤ 400A</div>
+        <h3 class="seg-card__range">PrismaSeT G</h3>
+        <ul class="seg-card__apps">
+          <li>CIB Small &amp; Medium</li>
+        </ul>
+        <div class="seg-card__band">Power LV</div>
+      </article>
+
+      <button class="seg-card seg-card--active" role="listitem" id="prismasetPCard" style="--seg:4">
+        <div class="seg-card__amp">≤ 630A — ≤ 3200A</div>
+        <h3 class="seg-card__range">PrismaSeT P · MCC · UE</h3>
+        <ul class="seg-card__apps">
+          <li>Large Building</li>
+          <li>Large critical &amp; Infrastructure</li>
+          <li>Terminal distribution · Power LV · Control LV</li>
+        </ul>
+        <span class="seg-card__cta">Open PrismaSeT P 3200A
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+
+    </div>
+    <footer class="slide-footer slide-footer--dark">©2026 Schneider Electric. All Rights Reserved</footer>
+  </section>
+
+  <!-- ============ SLIDE 3 — PRISMASET P 3200A DASHBOARD ============ -->
+  <section class="slide slide--dashboard" id="slide-dashboard" data-slide="dashboard">
+    <header class="slide-head slide-head--light">
+      <h2>PrismaSeT P 3200A — from Non-Connected to Connected</h2>
+      <p class="hint-pill">Click the product hotspots to zoom in and find out more</p>
+    </header>
+
+    <!-- The stage is what gets scaled/translated by the click-to-zoom -->
+    <div class="stage" id="stage">
+      <div class="panels-row" id="panelsRow">
+
+        <!-- PANEL 1 — Easy Non-connected -->
+        <figure class="panel" data-config="Easy Non-connected">
+          <div class="board">
+            <svg class="board__svg" viewBox="0 0 300 380" aria-hidden="true">
+              <rect x="6" y="6" width="288" height="368" rx="8" class="sb-frame"/>
+              <rect x="18" y="18" width="264" height="344" rx="4" class="sb-inner"/>
+              <line x1="150" y1="18" x2="150" y2="362" class="sb-rail"/>
+              <line x1="18" y1="120" x2="282" y2="120" class="sb-rail"/>
+              <line x1="18" y1="240" x2="282" y2="240" class="sb-rail"/>
+              <rect x="30" y="34" width="100" height="64" rx="3" class="sb-block sb-block--dark"/>
+              <rect x="166" y="34" width="100" height="64" rx="3" class="sb-block"/>
+              <rect x="30" y="136" width="100" height="84" rx="3" class="sb-block"/>
+              <rect x="166" y="136" width="100" height="40" rx="3" class="sb-block sb-block--dark"/>
+              <g class="sb-din">
+                <rect x="166" y="190" width="14" height="36" rx="2"/><rect x="184" y="190" width="14" height="36" rx="2"/>
+                <rect x="202" y="190" width="14" height="36" rx="2"/><rect x="220" y="190" width="14" height="36" rx="2"/>
+                <rect x="238" y="190" width="14" height="36" rx="2"/>
+              </g>
+              <g class="sb-din">
+                <rect x="30" y="258" width="14" height="36" rx="2"/><rect x="48" y="258" width="14" height="36" rx="2"/>
+                <rect x="66" y="258" width="14" height="36" rx="2"/><rect x="84" y="258" width="14" height="36" rx="2"/>
+              </g>
+              <rect x="166" y="258" width="100" height="84" rx="3" class="sb-block"/>
+              <rect x="30" y="306" width="100" height="36" rx="3" class="sb-block sb-block--dark"/>
+            </svg>
+
+            <button class="hotspot" data-product="mtz"  style="--x:26%; --y:17%;"><span class="hotspot__ring"></span><span class="hotspot__label">MasterPacT MTZ</span></button>
+            <button class="hotspot" data-product="nsx"  style="--x:26%; --y:47%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSX</span></button>
+            <button class="hotspot" data-product="nsxm" style="--x:72%; --y:41%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSXm</span></button>
+          </div>
+          <figcaption class="panel__caption">Easy Non-connected</figcaption>
+        </figure>
+
+        <!-- PANEL 2 — Optimum connected wireless -->
+        <figure class="panel" data-config="Optimum connected wireless">
+          <div class="board">
+            <svg class="board__svg" viewBox="0 0 300 380" aria-hidden="true">
+              <rect x="6" y="6" width="288" height="368" rx="8" class="sb-frame"/>
+              <rect x="18" y="18" width="264" height="344" rx="4" class="sb-inner"/>
+              <line x1="150" y1="18" x2="150" y2="362" class="sb-rail"/>
+              <line x1="18" y1="120" x2="282" y2="120" class="sb-rail"/>
+              <line x1="18" y1="240" x2="282" y2="240" class="sb-rail"/>
+              <rect x="30" y="34" width="100" height="64" rx="3" class="sb-block sb-block--dark"/>
+              <rect x="166" y="34" width="100" height="30" rx="3" class="sb-block sb-block--green"/>
+              <rect x="166" y="72" width="100" height="26" rx="3" class="sb-block"/>
+              <rect x="30" y="136" width="100" height="84" rx="3" class="sb-block"/>
+              <rect x="166" y="136" width="46" height="40" rx="3" class="sb-block sb-block--green"/>
+              <rect x="220" y="136" width="46" height="40" rx="3" class="sb-block sb-block--dark"/>
+              <g class="sb-din">
+                <rect x="166" y="190" width="14" height="36" rx="2"/><rect x="184" y="190" width="14" height="36" rx="2"/>
+                <rect x="202" y="190" width="14" height="36" rx="2"/><rect x="220" y="190" width="14" height="36" rx="2"/>
+                <rect x="238" y="190" width="14" height="36" rx="2"/>
+              </g>
+              <g class="sb-din">
+                <rect x="30" y="258" width="14" height="36" rx="2"/><rect x="48" y="258" width="14" height="36" rx="2"/>
+                <rect x="66" y="258" width="14" height="36" rx="2"/><rect x="84" y="258" width="14" height="36" rx="2"/>
+              </g>
+              <rect x="166" y="258" width="100" height="84" rx="3" class="sb-block"/>
+              <rect x="30" y="306" width="100" height="36" rx="3" class="sb-block sb-block--green"/>
+              <g class="sb-wave" transform="translate(248,52)">
+                <path d="M0 0a8 8 0 0 1 8 8M0 -6a14 14 0 0 1 14 14M0 -12a20 20 0 0 1 20 20"/>
+              </g>
+            </svg>
+
+            <button class="hotspot" data-product="mtz"        style="--x:26%; --y:17%;"><span class="hotspot__ring"></span><span class="hotspot__label">MasterPacT MTZ</span></button>
+            <button class="hotspot" data-product="nsx"        style="--x:26%; --y:47%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSX</span></button>
+            <button class="hotspot" data-product="nsxm"       style="--x:63%; --y:41%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSXm</span></button>
+            <button class="hotspot" data-product="heattag"    style="--x:72%; --y:13%;"><span class="hotspot__ring"></span><span class="hotspot__label">PowerLogic HeatTag</span></button>
+            <button class="hotspot" data-product="panelserver" style="--x:26%; --y:85%;"><span class="hotspot__ring"></span><span class="hotspot__label">Panel Server</span></button>
+          </div>
+          <figcaption class="panel__caption">Optimum connected wireless</figcaption>
+        </figure>
+
+        <!-- PANEL 3 — Optimum connected wired -->
+        <figure class="panel" data-config="Optimum connected wired">
+          <div class="board">
+            <svg class="board__svg" viewBox="0 0 300 380" aria-hidden="true">
+              <rect x="6" y="6" width="288" height="368" rx="8" class="sb-frame"/>
+              <rect x="18" y="18" width="264" height="344" rx="4" class="sb-inner"/>
+              <line x1="150" y1="18" x2="150" y2="362" class="sb-rail"/>
+              <line x1="18" y1="120" x2="282" y2="120" class="sb-rail"/>
+              <line x1="18" y1="240" x2="282" y2="240" class="sb-rail"/>
+              <path d="M130 66h36M150 98v38M150 220v38M216 176v14" class="sb-wire"/>
+              <rect x="30" y="34" width="100" height="64" rx="3" class="sb-block sb-block--dark"/>
+              <rect x="166" y="34" width="100" height="30" rx="3" class="sb-block sb-block--green"/>
+              <rect x="166" y="72" width="100" height="26" rx="3" class="sb-block sb-block--dark"/>
+              <rect x="30" y="136" width="100" height="84" rx="3" class="sb-block"/>
+              <rect x="166" y="136" width="46" height="40" rx="3" class="sb-block sb-block--green"/>
+              <rect x="220" y="136" width="46" height="40" rx="3" class="sb-block"/>
+              <g class="sb-din">
+                <rect x="166" y="190" width="14" height="36" rx="2"/><rect x="184" y="190" width="14" height="36" rx="2"/>
+                <rect x="202" y="190" width="14" height="36" rx="2"/><rect x="220" y="190" width="14" height="36" rx="2"/>
+                <rect x="238" y="190" width="14" height="36" rx="2"/>
+              </g>
+              <g class="sb-din">
+                <rect x="30" y="258" width="14" height="36" rx="2"/><rect x="48" y="258" width="14" height="36" rx="2"/>
+                <rect x="66" y="258" width="14" height="36" rx="2"/><rect x="84" y="258" width="14" height="36" rx="2"/>
+              </g>
+              <rect x="166" y="258" width="100" height="40" rx="3" class="sb-block sb-block--green"/>
+              <rect x="166" y="306" width="100" height="36" rx="3" class="sb-block sb-block--dark"/>
+              <rect x="30" y="306" width="100" height="36" rx="3" class="sb-block sb-block--green"/>
+            </svg>
+
+            <button class="hotspot" data-product="mtz"         style="--x:26%; --y:17%;"><span class="hotspot__ring"></span><span class="hotspot__label">MasterPacT MTZ</span></button>
+            <button class="hotspot" data-product="nsx"         style="--x:26%; --y:47%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSX</span></button>
+            <button class="hotspot" data-product="nsxm"        style="--x:63%; --y:41%;"><span class="hotspot__ring"></span><span class="hotspot__label">ComPacT NSXm</span></button>
+            <button class="hotspot" data-product="heattag"     style="--x:72%; --y:22%;"><span class="hotspot__ring"></span><span class="hotspot__label">PowerLogic HeatTag</span></button>
+            <button class="hotspot" data-product="panelserver" style="--x:72%; --y:73%;"><span class="hotspot__ring"></span><span class="hotspot__label">Panel Server</span></button>
+          </div>
+          <figcaption class="panel__caption">Optimum connected wired</figcaption>
+        </figure>
+
+      </div>
+    </div>
+
+    <!-- Zoom-out overlay button (Prompt 4) -->
+    <button class="btn btn--back" id="zoomOutBtn" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Zoom Out / Back to Panels
+    </button>
+
+    <footer class="slide-footer">©2026 Schneider Electric. All Rights Reserved</footer>
+  </section>
+
+</main>
+
+<!-- ============ PRODUCT DETAIL DRAWER (Prompt 5) ============ -->
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Product details">
+  <button class="drawer__close" id="drawerClose" aria-label="Close details">✕</button>
+  <p class="drawer__category" id="drawerCategory"></p>
+  <h3 class="drawer__title" id="drawerTitle"></h3>
+  <div class="drawer__body" id="drawerBody"></div>
+  <div class="drawer__chips" id="drawerChips"></div>
+</aside>
+<div class="drawer-scrim" id="drawerScrim" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
