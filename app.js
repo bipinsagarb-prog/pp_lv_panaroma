@@ -241,10 +241,144 @@ const PRODUCTS = {
   }
 };
 
+/* ---------- 3 intro pages (title -> segments): info popups sourced from
+   "PP LV Panorama storyboard.pdf". Rendered through the same drawer as
+   PRODUCTS (see openDrawer's PRODUCTS[id] || INFO_TOPICS[id] lookup), with
+   two extra field kinds that PRODUCTS doesn't use:
+     - fullImage: one big pre-laid-out card image (used where the source PDF
+       slide was itself already a single flattened picture)
+     - groups: [{ heading, body, images }] for richer multi-part text+photos
+     - table: the Protection function/device matrix (see openDrawer) ---------- */
+const INFO_TOPICS = {
+  software: {
+    name: "Analytics, Apps and Services",
+    category: "EcoStruxure · Software, Apps, Analytics & Services",
+    fullImage: "assets/info-software-apps-analytics.png",
+    description: "The data are collected and processed in the cloud-based EcoStruxure platform to provide advanced Analytics, Apps and Services. The purpose is to enable advanced diagnostics, alarming, predictive and preventive maintenance.",
+    chips: ["Cloud", "Analytics", "EcoStruxure Power Advisor", "EcoStruxure Energy Hub"]
+  },
+  edgecontrol: {
+    name: "Edge Control",
+    category: "EcoStruxure · Edge Control",
+    fullImage: "assets/info-edge-control.png",
+    description: "Edge Control refers to the layer that provides local monitoring, control, and data processing at the edge of the network, close to the assets and processes. Edge Control provides real-time data acquisition, visualisation, alarming, and control, ensuring fast, consistent access to actionable information for operators. Edge Control is essential for local decision-making, fault tolerance, and secure connectivity, while enabling integration with high level analytics and cloud services. This layer consists of PLCs, controllers, SCADA systems, BMS, Automation systems, etc.",
+    chips: ["PLC", "SCADA", "BMS", "Automation"]
+  },
+  connectedproducts: {
+    name: "Connected Products",
+    category: "EcoStruxure · Connected Products",
+    fullImage: "assets/info-connected-products.png",
+    description: "Connected products are capable to provide data regarding their statuses, health, electrical parameters through communication protocols (Modbus, Zigbee…). They consist of advanced switchgears and controlgears (such as MasterPacT or ComPacT circuit breakers…), meters (ammeters, energy meters…), sensors (HeatTag…), gateways, UPS, EV Chargers…",
+    chips: ["Modbus", "Zigbee", "Switchgear", "Meters", "Sensors"]
+  },
+  sourcemgmt: {
+    name: "Source Management",
+    category: "Power Products · What for?",
+    fullImage: "assets/info-source-management.jpg",
+    description: "Source management products cover the full current range from simple all-in-one transfer switches to the highest-rated circuit breaker and switch-disconnector combinations, plus ASCO bypass solutions for maintenance without disrupting power.",
+    chips: ["TransferPacT", "ComPacT NS/NSX", "MasterPacT MTZ", "ASCO"]
+  },
+  isolation: {
+    name: "Isolation",
+    category: "Power Products · What for?",
+    fullImage: "assets/info-isolation.jpg",
+    description: "In order to ensure operator safety during maintenance operations on the downstream circuit: the device shall ensure proper disconnection from voltage and current when in the off position, and shall provide a clear indication of the power supply status.",
+    chips: ["MasterPacT", "ComPacT", "Acti9", "TransferPacT"]
+  },
+  mechanical: {
+    name: "Mechanical Assembly and Protection Against Live Parts",
+    category: "Power Products · What for?",
+    fullImage: "assets/info-mechanical-assembly.png",
+    description: "Devices are mechanically installed and protected against live parts during operation and maintenance, whether through a centralized switchboard architecture or a decentralized busbar trunking architecture.",
+    chips: ["Centralized", "Decentralized", "Canalis", "I-Line"]
+  },
+  remotecontrol: {
+    name: "Remote Control",
+    category: "Power Products · What for?",
+    description: "Different types of actuators are available to control remotely electrical distribution (to build the complete function the actuator can be associated with an HMI or automation system).",
+    groups: [
+      {
+        heading: "Contactors (TeSys, Easy TeSys, Acti9, Multi9)",
+        body: "The contactor is the device to remotely open and close an electrical circuit. It does not ensure any electrical protection function (unlike circuit breaker or switch disconnector). They are very common to control circuit of motors, heaters, lighting…",
+        images: ["assets/info-remote-contactor1.jpg", "assets/info-remote-contactor2.jpg"]
+      },
+      {
+        heading: "Electrical Auxiliaries for circuit breakers and disconnectors (Acti9, Multi9, PacT, EasyPact, TeSys Power…)",
+        body: "Electrical auxiliaries such as voltage releases (MN, MX and XF coils) and electrical motor (MCH) can be installed inside ACBs and MCCBs. For miniature circuit breakers the control system is installed on the side of the circuit breaker (Acti9 RCA).",
+        images: ["assets/info-remote-aux1.jpg", "assets/info-remote-aux2.jpg"]
+      },
+      {
+        heading: "Impulse relays (Acti9 iTL)",
+        body: "When at least 2 points of control are required. Mainly for lighting. No protection function ensured.",
+        images: ["assets/info-remote-impulse-relay.jpg"]
+      },
+      {
+        heading: "Other relays (Acti9 MIN…)",
+        body: "Specific relays enable remote control with additional automation function such as timers or automatic recloser.",
+        images: ["assets/info-remote-other-relay1.jpg", "assets/info-remote-other-relay2.jpg"]
+      }
+    ],
+    chips: ["Contactors", "Auxiliaries", "Impulse relays", "Acti9"]
+  },
+  monitoring: {
+    name: "Monitoring and Communication",
+    category: "Power Products · What for?",
+    description: "Different types of devices report status and electrical data, and connect that information to HMIs, automation systems, or Modbus networks.",
+    groups: [
+      {
+        heading: "Electronic control units (MicroLogic for PacT series)",
+        body: "The electronic control unit of PacT series circuit breakers enables monitoring of electrical parameters (current, voltage, energy…).",
+        images: ["assets/info-monitor-micrologic-mtz.jpg", "assets/info-monitor-micrologic-nsx.jpg"]
+      },
+      {
+        heading: "Indication Auxiliaries (Acti9, Multi9, PacT, EasyPact, TeSys…)",
+        body: "Indication auxiliaries (OF, SD…) installed inside or on the side of devices enable reporting of the status (open, closed, tripped…). They can be connected to indication lights or automation systems.",
+        images: ["assets/info-monitor-indication1.jpg", "assets/info-monitor-indication2.jpg"]
+      },
+      {
+        heading: "Gateways (Enerlin’X, Acti9)",
+        body: "The gateways enable connections of devices equipped with MicroLogic control units or devices equipped with indication contacts to Modbus TCP or Modbus SL networks.",
+        images: ["assets/info-monitor-gateways.jpg"]
+      },
+      {
+        heading: "All-in-one devices (Acti9 Reflex, Active)",
+        body: "Some devices Acti9 Reflex iC60 or Acti9 Active embed indication functions (wired or wireless).",
+        images: ["assets/info-monitor-allinone1.jpg", "assets/info-monitor-allinone2.jpg"]
+      }
+    ],
+    chips: ["MicroLogic", "Indication", "Gateways", "Acti9 Reflex"]
+  },
+  protection: {
+    name: "Protection",
+    category: "Power Products · What for?",
+    description: "Protection against short-circuit, overload, earth-fault, surge and more, ensured by circuit breakers, fuse holders, switch disconnectors, overload protection relays, and surge protection devices — see exactly which device covers which function below.",
+    table: {
+      columns: ["Circuit breaker", "Fuse holder", "Switch disconnector", "Overload protection relay", "Surge Protection Devices (SPD)"],
+      rows: [
+        { event: "Short-circuit", goal: "Open the circuit as fast as possible to protect cable and avoid fire", cells: ["X", "X", "", "", ""] },
+        { event: "Overload", goal: "Open the circuit to protect loads and cables (but not too early to avoid nuisance tripping)", cells: ["(X)", "X", "", "X", ""] },
+        { event: "Isolation", goal: "Make sure that the circuit is not live during maintenance", cells: ["X", "(X)", "X", "", ""] },
+        { event: "Earth-fault", goal: "Protect people and/or avoid fire and damages on loads", cells: ["(X)", "", "(X)", "", ""] },
+        { event: "Under and overvoltage", goal: "Open the circuit to protect sensitive loads and electrical installation but not too early to avoid nuisance tripping", cells: ["(X)", "", "", "", ""] },
+        { event: "Final distribution Arc fault", goal: "Open the circuit as fast as possible to avoid fire", cells: ["(X)", "", "", "", ""] },
+        { event: "Transient overvoltage (Surge due to Lightning…)", goal: "Evacuate the surge to earth in order to protect sensitive loads and electrical installation", cells: ["", "", "", "", "X"] }
+      ],
+      notes: [
+        "X: The function is ensured whatever the reference of the Schneider Electric device.",
+        "(X): The function can be ensured depending on the reference and/or optional auxiliary/addon."
+      ]
+    },
+    chips: ["Short-circuit", "Overload", "Earth-fault", "Surge"]
+  }
+};
+
 /* ---------- Element references ---------- */
 const body        = document.body;
 const slides      = {
   title:     document.getElementById("slide-title"),
+  ecostruxure: document.getElementById("slide-ecostruxure"),
+  architecture: document.getElementById("slide-architecture"),
+  whatfor:     document.getElementById("slide-whatfor"),
   segments:  document.getElementById("slide-segments"),
   dashboard: document.getElementById("slide-dashboard"),
   machineControlPanel: document.getElementById("slide-machineControlPanel"),
@@ -286,6 +420,7 @@ function goToSlide(name) {
   body.dataset.slide = name;
   if (name === "segments") layoutSegmentsMap();
   if (name === "dashboard") sizeBoards();
+  if (INFO_MAP_IMAGES[name]) sizeInfoMap(name);
 }
 
 /* =========================================================
@@ -338,13 +473,16 @@ function zoomToHotspot(hotspot) {
 }
 
 function resetZoom() {
-  if (!zoomState) return;
-  zoomState.hotspot.classList.remove("is-target");
-  zoomState = null;
+  // Drawers opened without a zoom (the 3 info pages' hotspots) have no
+  // zoomState, but still need the close button/scrim to close them.
+  if (zoomState) {
+    zoomState.hotspot.classList.remove("is-target");
+    zoomState = null;
 
-  clearTimeout(drawerTimer);
-  stage.classList.remove("is-zoomed");
-  stage.style.transform = "";     // cleanly reset the transform matrix
+    clearTimeout(drawerTimer);
+    stage.classList.remove("is-zoomed");
+    stage.style.transform = "";     // cleanly reset the transform matrix
+  }
   closeDrawer();
 }
 
@@ -352,7 +490,7 @@ function resetZoom() {
    Prompt 5 — Product detail drawer
    ========================================================= */
 function openDrawer(productId) {
-  const p = PRODUCTS[productId];
+  const p = PRODUCTS[productId] || INFO_TOPICS[productId];
   if (!p) return;
 
   document.getElementById("drawerCategory").textContent = p.category;
@@ -360,6 +498,15 @@ function openDrawer(productId) {
 
   const bodyEl = document.getElementById("drawerBody");
   bodyEl.innerHTML = "";
+
+  if (p.fullImage) {
+    const img = document.createElement("img");
+    img.className = "drawer__full-image";
+    img.src = p.fullImage;
+    img.alt = p.name;
+    img.loading = "lazy";
+    bodyEl.appendChild(img);
+  }
 
   if ((p.images && p.images.length) || p.video) {
     // Images and video share one row so the video doesn't take a full-width
@@ -458,9 +605,82 @@ function openDrawer(productId) {
     }
   }
 
+  if (p.groups && p.groups.length) {
+    p.groups.forEach(group => {
+      const h = document.createElement("h5");
+      h.textContent = group.heading;
+      bodyEl.appendChild(h);
+
+      const body = document.createElement("p");
+      body.textContent = group.body;
+      bodyEl.appendChild(body);
+
+      if (group.images && group.images.length) {
+        const row = document.createElement("div");
+        row.className = "drawer__gallery";
+        group.images.forEach(src => {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = group.heading;
+          img.loading = "lazy";
+          row.appendChild(img);
+        });
+        bodyEl.appendChild(row);
+      }
+    });
+  }
+
+  if (p.table) {
+    const t = p.table;
+    const table = document.createElement("table");
+    table.className = "drawer__table";
+
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    headRow.appendChild(document.createElement("th"));
+    t.columns.forEach(col => {
+      const th = document.createElement("th");
+      th.textContent = col;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    t.rows.forEach(row => {
+      const tr = document.createElement("tr");
+      const th = document.createElement("th");
+      th.scope = "row";
+      const evt = document.createElement("span");
+      evt.className = "drawer__table-event";
+      evt.textContent = row.event;
+      const goal = document.createElement("span");
+      goal.className = "drawer__table-goal";
+      goal.textContent = row.goal;
+      th.appendChild(evt);
+      th.appendChild(goal);
+      tr.appendChild(th);
+      row.cells.forEach(cell => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    bodyEl.appendChild(table);
+
+    if (t.notes && t.notes.length) {
+      const notes = document.createElement("p");
+      notes.className = "drawer__table-notes";
+      notes.innerHTML = t.notes.map(n => n.replace(/^(\S+:)/, "<strong>$1</strong>")).join("<br>");
+      bodyEl.appendChild(notes);
+    }
+  }
+
   const chips = document.getElementById("drawerChips");
   chips.innerHTML = "";
-  p.chips.forEach(c => {
+  (p.chips || []).forEach(c => {
     const s = document.createElement("span");
     s.textContent = c;
     chips.appendChild(s);
@@ -623,6 +843,40 @@ SEGMENT_HOTSPOTS.forEach(({ id }) => {
 });
 
 /* =========================================================
+   The 3 info pages between title and segments (EcoStruxure solutions,
+   Electrical Architecture, Power Products: What for?) — each is one big
+   diagram image (cropped straight from the source PDF, title baked in)
+   with invisible/circle hotspot buttons overlaid in percent coordinates.
+   Sized the same way as .segments-map: the container's aspect-ratio is
+   fixed to the image's own real dimensions, so percent positions never
+   drift into letterbox bars.
+   ========================================================= */
+const INFO_MAP_IMAGES = {
+  ecostruxure:  ".ecostruxure-map__image",
+  architecture: ".architecture-map__image",
+  whatfor:      ".whatfor-map__image"
+};
+
+function sizeInfoMap(slideName) {
+  const imgSelector = INFO_MAP_IMAGES[slideName];
+  const img = document.querySelector(imgSelector);
+  if (!img || !img.naturalWidth) return;
+  const map = img.closest(".info-map");
+  if (!map) return;
+  map.style.aspectRatio = img.naturalWidth + " / " + img.naturalHeight;
+}
+
+Object.entries(INFO_MAP_IMAGES).forEach(([slideName, sel]) => {
+  const img = document.querySelector(sel);
+  if (!img) return;
+  if (img.complete) sizeInfoMap(slideName);
+  else img.addEventListener("load", () => sizeInfoMap(slideName));
+});
+window.addEventListener("resize", () => {
+  Object.keys(INFO_MAP_IMAGES).forEach(sizeInfoMap);
+});
+
+/* =========================================================
    Dashboard switchboard photos — sized at runtime to exactly match each
    image's real aspect ratio within its allocated flex space, so they're
    never cropped (object-fit:cover) or letterboxed, while still fitting the
@@ -696,8 +950,30 @@ window.addEventListener("resize", sizeBoards);
 /* =========================================================
    Wiring
    ========================================================= */
-document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("segments"));
+document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("ecostruxure"));
 document.getElementById("prismasetPCard").addEventListener("click", () => goToSlide("dashboard"));
+
+/* The 3 info pages' Previous/Next buttons (top-right, same as Back to Start/Segments) */
+const INFO_PAGE_NAV = {
+  ecostruxure:  { prev: "title",        next: "architecture" },
+  architecture: { prev: "ecostruxure",  next: "whatfor" },
+  whatfor:      { prev: "architecture", next: "segments" }
+};
+Object.entries(INFO_PAGE_NAV).forEach(([slideName, { prev, next }]) => {
+  const prevBtn = document.getElementById("prevFrom" + slideName[0].toUpperCase() + slideName.slice(1));
+  const nextBtn = document.getElementById("nextFrom" + slideName[0].toUpperCase() + slideName.slice(1));
+  if (prevBtn) prevBtn.addEventListener("click", () => goToSlide(prev));
+  if (nextBtn) nextBtn.addEventListener("click", () => goToSlide(next));
+});
+
+/* Info-page hotspots open the same drawer as product hotspots, but with no
+   click-to-zoom (these pages have no .board/.panel "stage" to zoom into). */
+document.querySelectorAll(".info-hotspot").forEach(h => {
+  h.addEventListener("click", e => {
+    e.stopPropagation();
+    openDrawer(h.dataset.info);
+  });
+});
 
 /* Each non-PrismaSeT-P segment hotspot opens its own simple info page */
 const SEGMENT_PAGE_LINKS = {
@@ -744,9 +1020,11 @@ const SEGMENT_DETAIL_SLIDES = ["machineControlPanel", "mccUe", "xsSG", "xsResi9"
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     if (zoomState) resetZoom();
+    else if (drawer.classList.contains("is-open")) closeDrawer();
     else if (currentSlide === "dashboard") goToSlide("segments");
     else if (SEGMENT_DETAIL_SLIDES.includes(currentSlide)) goToSlide("segments");
     else if (currentSlide === "segments") goToSlide("title");
+    else if (INFO_PAGE_NAV[currentSlide]) goToSlide(INFO_PAGE_NAV[currentSlide].prev);
   }
 });
 
@@ -862,11 +1140,15 @@ window.addEventListener("resize", () => {
 
   function labelForSlide(slide) {
     if (slide === "title") return "Title page";
+    if (slide === "ecostruxure") return "EcoStruxure solutions";
+    if (slide === "architecture") return "Power Products in Electrical Architecture";
+    if (slide === "whatfor") return "Power Products: What for?";
     if (slide === "segments") return "Market segments";
     if (slide === "dashboard") return "PrismaSeT P dashboard";
     if (slide.startsWith("drawer-")) {
-      const p = PRODUCTS[slide.slice(7)];
-      return "Drawer · " + (p ? p.name : slide.slice(7));
+      const id = slide.slice(7);
+      const p = PRODUCTS[id] || INFO_TOPICS[id];
+      return "Drawer · " + (p ? p.name : id);
     }
     return slide;
   }

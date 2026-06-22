@@ -85,6 +85,14 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   color: rgba(255,255,255,.45);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
 /* =========================================================
    Prompt 2 — SLIDE 1 (Title)
    ========================================================= */
@@ -734,6 +742,151 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 }
 .drawer-scrim.is-on { opacity: 1; pointer-events: auto; }
 
+.drawer__full-image {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  margin-bottom: 1rem;
+}
+
+.drawer__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: .6rem 0 .8rem;
+  font-size: .76rem;
+}
+.drawer__table th, .drawer__table td {
+  border: 1px solid var(--line);
+  padding: .4rem .5rem;
+  text-align: center;
+  vertical-align: middle;
+}
+.drawer__table thead th {
+  background: var(--se-green);
+  color: #fff;
+  font-weight: 700;
+  font-size: .68rem;
+}
+.drawer__table tbody th {
+  text-align: left;
+  background: rgba(0,150,57,.07);
+}
+.drawer__table-event { display: block; font-weight: 700; color: var(--ink); }
+.drawer__table-goal { display: block; font-weight: 400; font-size: .7rem; color: #5b6e63; margin-top: .15rem; }
+.drawer__table-notes { font-size: .68rem; color: #5b6e63; margin-top: .4rem; }
+
+/* =========================================================
+   3 info pages between title and segments (EcoStruxure solutions,
+   Electrical Architecture, Power Products: What for?)
+   ========================================================= */
+.slide-nav-corner {
+  position: absolute;
+  top: calc(clamp(10px, 2vh, 24px) + 6px);
+  right: clamp(18px, 5vw, 64px);
+  z-index: 20;
+  display: flex;
+  gap: 10px;
+}
+
+.info-map {
+  position: relative;
+  flex: 1;
+  margin-top: clamp(16px, 3.5vh, 36px);
+  min-height: 0;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.info-map__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* EcoStruxure page hotspots: no baked-in marker on the source diagram, so
+   draw the usual green glowing ring + label (same visual language as the
+   product hotspots elsewhere on the site). */
+.info-hotspot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  width: clamp(50px, 5vw, 80px);
+}
+.info-hotspot__ring {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: var(--se-green-bright);
+  box-shadow: 0 0 6px 2px rgba(61,205,88,.9);
+  animation: hotspot-glow 2.2s ease-in-out infinite;
+  transition: transform var(--t-fast) var(--ease-out), background var(--t-fast);
+}
+.info-hotspot:hover .info-hotspot__ring,
+.info-hotspot:focus-visible .info-hotspot__ring {
+  transform: scale(1.45);
+  background: #ffffff;
+  border-color: var(--se-green-bright);
+}
+.info-hotspot__label {
+  position: absolute;
+  top: calc(100% + 4px);
+  max-width: 160px;
+  white-space: nowrap;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--slate-900);
+  background: var(--se-green-bright);
+  padding: .14rem .5rem;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--t-fast), transform var(--t-fast);
+  pointer-events: none;
+}
+.info-hotspot:hover .info-hotspot__label,
+.info-hotspot:focus-visible .info-hotspot__label { opacity: 1; transform: translateY(0); }
+
+/* "What for?" page: the source diagram already has a black circle + white
+   plus baked in at each of the 6 spots, so this variant is just an
+   invisible click target with a soft glow ring on hover/focus to confirm
+   it's interactive, instead of drawing a second marker on top. */
+.info-hotspot--bare {
+  width: clamp(46px, 4.2vw, 64px);
+  height: clamp(46px, 4.2vw, 64px);
+  border-radius: 50%;
+  transition: box-shadow var(--t-fast);
+}
+.info-hotspot--bare:hover,
+.info-hotspot--bare:focus-visible {
+  box-shadow: 0 0 0 6px rgba(61,205,88,.35);
+}
+
+/* Electrical Architecture page: glow that singles out the "Power Products"
+   legend box without touching the other 5 (Industrial Automation, Digital
+   Energy, Power Systems, Secure Power, Home Solutions). */
+.architecture-highlight {
+  position: absolute;
+  left: var(--x); top: var(--y); width: var(--w); height: var(--h);
+  border-radius: 6px;
+  border: 3px solid var(--se-green-bright);
+  box-shadow: 0 0 0 0 rgba(61,205,88,.7);
+  animation: hotspot-glow-box 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hotspot-glow-box {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(61,205,88,.6); }
+  50%      { box-shadow: 0 0 18px 7px rgba(61,205,88,.9); }
+}
+
 /* =========================================================
    Prompt 6 — Responsiveness
    ========================================================= */
@@ -757,6 +910,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   /* The heading can wrap to multiple lines here — take the button out of the
      corner overlay and let it sit on its own row above the heading instead. */
   .btn--back-corner { position: static; align-self: flex-end; margin-bottom: 8px; }
+  .slide-nav-corner { position: static; align-self: flex-end; margin-bottom: 8px; }
 }
 
 @media (max-width: 560px) {
