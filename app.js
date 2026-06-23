@@ -253,121 +253,55 @@ const INFO_TOPICS = {
   software: {
     name: "Analytics, Apps and Services",
     category: "EcoStruxure · Software, Apps, Analytics & Services",
-    fullImage: "assets/info-software-apps-analytics.png",
-    description: "The data are collected and processed in the cloud-based EcoStruxure platform to provide advanced Analytics, Apps and Services. The purpose is to enable advanced diagnostics, alarming, predictive and preventive maintenance.",
+    fullImage: "assets/analytics-Apps-and-Services.png",
     chips: ["Cloud", "Analytics", "EcoStruxure Power Advisor", "EcoStruxure Energy Hub"]
   },
   edgecontrol: {
     name: "Edge Control",
     category: "EcoStruxure · Edge Control",
-    fullImage: "assets/info-edge-control.png",
-    description: "Edge Control refers to the layer that provides local monitoring, control, and data processing at the edge of the network, close to the assets and processes. Edge Control provides real-time data acquisition, visualisation, alarming, and control, ensuring fast, consistent access to actionable information for operators. Edge Control is essential for local decision-making, fault tolerance, and secure connectivity, while enabling integration with high level analytics and cloud services. This layer consists of PLCs, controllers, SCADA systems, BMS, Automation systems, etc.",
+    fullImage: "assets/edge-control.png",
     chips: ["PLC", "SCADA", "BMS", "Automation"]
   },
   connectedproducts: {
     name: "Connected Products",
     category: "EcoStruxure · Connected Products",
-    fullImage: "assets/info-connected-products.png",
-    description: "Connected products are capable to provide data regarding their statuses, health, electrical parameters through communication protocols (Modbus, Zigbee…). They consist of advanced switchgears and controlgears (such as MasterPacT or ComPacT circuit breakers…), meters (ammeters, energy meters…), sensors (HeatTag…), gateways, UPS, EV Chargers…",
+    fullImage: "assets/connected-products.png",
     chips: ["Modbus", "Zigbee", "Switchgear", "Meters", "Sensors"]
   },
   sourcemgmt: {
     name: "Source Management",
     category: "Power Products · What for?",
-    fullImage: "assets/info-source-management.jpg",
-    description: "Source management products cover the full current range from simple all-in-one transfer switches to the highest-rated circuit breaker and switch-disconnector combinations, plus ASCO bypass solutions for maintenance without disrupting power.",
+    fullImage: "assets/source-management.png",
     chips: ["TransferPacT", "ComPacT NS/NSX", "MasterPacT MTZ", "ASCO"]
   },
   isolation: {
     name: "Isolation",
     category: "Power Products · What for?",
-    fullImage: "assets/info-isolation.jpg",
-    description: "In order to ensure operator safety during maintenance operations on the downstream circuit: the device shall ensure proper disconnection from voltage and current when in the off position, and shall provide a clear indication of the power supply status.",
+    fullImage: "assets/isolation.png",
     chips: ["MasterPacT", "ComPacT", "Acti9", "TransferPacT"]
   },
   mechanical: {
     name: "Mechanical Assembly and Protection Against Live Parts",
     category: "Power Products · What for?",
-    fullImage: "assets/info-mechanical-assembly.png",
-    description: "Devices are mechanically installed and protected against live parts during operation and maintenance, whether through a centralized switchboard architecture or a decentralized busbar trunking architecture.",
+    fullImage: "assets/Mechanical-assembly-and-protection-against-live-parts.png",
     chips: ["Centralized", "Decentralized", "Canalis", "I-Line"]
   },
   remotecontrol: {
     name: "Remote Control",
     category: "Power Products · What for?",
-    description: "Different types of actuators are available to control remotely electrical distribution (to build the complete function the actuator can be associated with an HMI or automation system).",
-    groups: [
-      {
-        heading: "Contactors (TeSys, Easy TeSys, Acti9, Multi9)",
-        body: "The contactor is the device to remotely open and close an electrical circuit. It does not ensure any electrical protection function (unlike circuit breaker or switch disconnector). They are very common to control circuit of motors, heaters, lighting…",
-        images: ["assets/info-remote-contactor1.jpg", "assets/info-remote-contactor2.jpg"]
-      },
-      {
-        heading: "Electrical Auxiliaries for circuit breakers and disconnectors (Acti9, Multi9, PacT, EasyPact, TeSys Power…)",
-        body: "Electrical auxiliaries such as voltage releases (MN, MX and XF coils) and electrical motor (MCH) can be installed inside ACBs and MCCBs. For miniature circuit breakers the control system is installed on the side of the circuit breaker (Acti9 RCA).",
-        images: ["assets/info-remote-aux1.jpg", "assets/info-remote-aux2.jpg"]
-      },
-      {
-        heading: "Impulse relays (Acti9 iTL)",
-        body: "When at least 2 points of control are required. Mainly for lighting. No protection function ensured.",
-        images: ["assets/info-remote-impulse-relay.jpg"]
-      },
-      {
-        heading: "Other relays (Acti9 MIN…)",
-        body: "Specific relays enable remote control with additional automation function such as timers or automatic recloser.",
-        images: ["assets/info-remote-other-relay1.jpg", "assets/info-remote-other-relay2.jpg"]
-      }
-    ],
+    fullImage: "assets/remote-control.png",
     chips: ["Contactors", "Auxiliaries", "Impulse relays", "Acti9"]
   },
   monitoring: {
     name: "Monitoring and Communication",
     category: "Power Products · What for?",
-    description: "Different types of devices report status and electrical data, and connect that information to HMIs, automation systems, or Modbus networks.",
-    groups: [
-      {
-        heading: "Electronic control units (MicroLogic for PacT series)",
-        body: "The electronic control unit of PacT series circuit breakers enables monitoring of electrical parameters (current, voltage, energy…).",
-        images: ["assets/info-monitor-micrologic-mtz.jpg", "assets/info-monitor-micrologic-nsx.jpg"]
-      },
-      {
-        heading: "Indication Auxiliaries (Acti9, Multi9, PacT, EasyPact, TeSys…)",
-        body: "Indication auxiliaries (OF, SD…) installed inside or on the side of devices enable reporting of the status (open, closed, tripped…). They can be connected to indication lights or automation systems.",
-        images: ["assets/info-monitor-indication1.jpg", "assets/info-monitor-indication2.jpg"]
-      },
-      {
-        heading: "Gateways (Enerlin’X, Acti9)",
-        body: "The gateways enable connections of devices equipped with MicroLogic control units or devices equipped with indication contacts to Modbus TCP or Modbus SL networks.",
-        images: ["assets/info-monitor-gateways.jpg"]
-      },
-      {
-        heading: "All-in-one devices (Acti9 Reflex, Active)",
-        body: "Some devices Acti9 Reflex iC60 or Acti9 Active embed indication functions (wired or wireless).",
-        images: ["assets/info-monitor-allinone1.jpg", "assets/info-monitor-allinone2.jpg"]
-      }
-    ],
+    fullImage: "assets/monitoring-and-communication.png",
     chips: ["MicroLogic", "Indication", "Gateways", "Acti9 Reflex"]
   },
   protection: {
     name: "Protection",
     category: "Power Products · What for?",
-    description: "Protection against short-circuit, overload, earth-fault, surge and more, ensured by circuit breakers, fuse holders, switch disconnectors, overload protection relays, and surge protection devices — see exactly which device covers which function below.",
-    table: {
-      columns: ["Circuit breaker", "Fuse holder", "Switch disconnector", "Overload protection relay", "Surge Protection Devices (SPD)"],
-      rows: [
-        { event: "Short-circuit", goal: "Open the circuit as fast as possible to protect cable and avoid fire", cells: ["X", "X", "", "", ""] },
-        { event: "Overload", goal: "Open the circuit to protect loads and cables (but not too early to avoid nuisance tripping)", cells: ["(X)", "X", "", "X", ""] },
-        { event: "Isolation", goal: "Make sure that the circuit is not live during maintenance", cells: ["X", "(X)", "X", "", ""] },
-        { event: "Earth-fault", goal: "Protect people and/or avoid fire and damages on loads", cells: ["(X)", "", "(X)", "", ""] },
-        { event: "Under and overvoltage", goal: "Open the circuit to protect sensitive loads and electrical installation but not too early to avoid nuisance tripping", cells: ["(X)", "", "", "", ""] },
-        { event: "Final distribution Arc fault", goal: "Open the circuit as fast as possible to avoid fire", cells: ["(X)", "", "", "", ""] },
-        { event: "Transient overvoltage (Surge due to Lightning…)", goal: "Evacuate the surge to earth in order to protect sensitive loads and electrical installation", cells: ["", "", "", "", "X"] }
-      ],
-      notes: [
-        "X: The function is ensured whatever the reference of the Schneider Electric device.",
-        "(X): The function can be ensured depending on the reference and/or optional auxiliary/addon."
-      ]
-    },
+    fullImage: "assets/protection.png",
     chips: ["Short-circuit", "Overload", "Earth-fault", "Surge"]
   }
 };
@@ -551,9 +485,11 @@ function openDrawer(productId) {
     bodyEl.appendChild(links);
   }
 
-  const desc = document.createElement("p");
-  desc.textContent = p.description;
-  bodyEl.appendChild(desc);
+  if (p.description) {
+    const desc = document.createElement("p");
+    desc.textContent = p.description;
+    bodyEl.appendChild(desc);
+  }
 
   if (p.connectivity && p.connectivity.length) {
     const h = document.createElement("h4");
