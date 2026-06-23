@@ -390,7 +390,6 @@ const slides      = {
 };
 const stage       = document.getElementById("stage");
 const backToSegmentsBtn = document.getElementById("backToSegmentsBtn");
-const backToStartBtn = document.getElementById("backToStartBtn");
 const drawer      = document.getElementById("drawer");
 const drawerScrim = document.getElementById("drawerScrim");
 
@@ -420,7 +419,6 @@ function goToSlide(name) {
   body.dataset.slide = name;
   if (name === "segments") layoutSegmentsMap();
   if (name === "dashboard") sizeBoards();
-  if (INFO_MAP_IMAGES[name]) sizeInfoMap(name);
 }
 
 /* =========================================================
@@ -845,36 +843,13 @@ SEGMENT_HOTSPOTS.forEach(({ id }) => {
 /* =========================================================
    The 3 info pages between title and segments (EcoStruxure solutions,
    Electrical Architecture, Power Products: What for?) — each is one big
-   diagram image (cropped straight from the source PDF, title baked in)
-   with invisible/circle hotspot buttons overlaid in percent coordinates.
-   Sized the same way as .segments-map: the container's aspect-ratio is
-   fixed to the image's own real dimensions, so percent positions never
-   drift into letterbox bars.
+   diagram image (cropped straight from the source PDF) with
+   invisible/circle/rectangle hotspot buttons overlaid in percent
+   coordinates. Each .info-map has its aspect-ratio set inline in HTML to
+   match its image's exact natural pixel dimensions, so the box's height is
+   always derived from its width with no JS and no letterboxing — see the
+   CSS comment on .info-map for why this replaced an earlier JS version.
    ========================================================= */
-const INFO_MAP_IMAGES = {
-  ecostruxure:  ".ecostruxure-map__image",
-  architecture: ".architecture-map__image",
-  whatfor:      ".whatfor-map__image"
-};
-
-function sizeInfoMap(slideName) {
-  const imgSelector = INFO_MAP_IMAGES[slideName];
-  const img = document.querySelector(imgSelector);
-  if (!img || !img.naturalWidth) return;
-  const map = img.closest(".info-map");
-  if (!map) return;
-  map.style.aspectRatio = img.naturalWidth + " / " + img.naturalHeight;
-}
-
-Object.entries(INFO_MAP_IMAGES).forEach(([slideName, sel]) => {
-  const img = document.querySelector(sel);
-  if (!img) return;
-  if (img.complete) sizeInfoMap(slideName);
-  else img.addEventListener("load", () => sizeInfoMap(slideName));
-});
-window.addEventListener("resize", () => {
-  Object.keys(INFO_MAP_IMAGES).forEach(sizeInfoMap);
-});
 
 /* =========================================================
    Dashboard switchboard photos — sized at runtime to exactly match each
@@ -1002,6 +977,12 @@ Object.entries(SEGMENT_PAGE_BACK_BUTTONS).forEach(([btnId, slideName]) => {
   if (el) el.addEventListener("click", () => goToSlide(slideName));
 });
 
+/* Segments' Previous mirrors the "What for?" page's Next button
+   (Title -> EcoStruxure -> Architecture -> What for? -> Segments). The 6
+   detail pages don't get one: they're sibling pages reached via a hotspot,
+   not a linear sequence, and already have a "Back to Segments" button. */
+document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("whatfor"));
+
 document.querySelectorAll(".hotspot").forEach(h => {
   h.addEventListener("click", e => {
     e.stopPropagation();
@@ -1011,7 +992,6 @@ document.querySelectorAll(".hotspot").forEach(h => {
 });
 
 backToSegmentsBtn.addEventListener("click", () => goToSlide("segments"));
-backToStartBtn.addEventListener("click", () => goToSlide("title"));
 document.getElementById("drawerClose").addEventListener("click", () => resetZoom());
 drawerScrim.addEventListener("click", () => resetZoom());
 

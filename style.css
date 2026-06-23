@@ -233,6 +233,12 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   height: 100vh;
   overflow: hidden;
 }
+/* The 3 info pages size their diagram from a fixed aspect-ratio (see
+   .info-map), which on a short viewport can need a little more than 100vh —
+   scroll instead of silently clipping content off the bottom. */
+.slide--info.is-active {
+  overflow-y: auto;
+}
 
 /* Shared heading + subheading layout — identical position and text size on every slide */
 .slide-head { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -406,6 +412,28 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .slide--segment-detail .slide-head h2 { color: var(--se-green-bright); }
 .slide--segment-detail .slide-head p { color: #d8f5e0; }
 .slide--segment-detail .slide-footer { color: rgba(255,255,255,.45); }
+
+/* Big centered placeholder for the 6 segment pages with no real content
+   yet — absolutely positioned over the whole slide (not a flex child of
+   the header) so it's always dead-centered regardless of the heading's
+   height. */
+.coming-soon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.coming-soon span {
+  font-size: clamp(2.6rem, 9vw, 6.4rem);
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--se-green-bright);
+  opacity: .85;
+  text-shadow: 0 0 50px rgba(61,205,88,.4);
+}
 
 .slide-head p.hint-pill {
   font-size: .78rem;
@@ -789,14 +817,30 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   gap: 10px;
 }
 
+/* No JS sizing here on purpose — aspect-ratio is set inline per page (matches
+   each PNG's own real pixel dimensions exactly), so the box's height is
+   always derived directly from its width with zero ambiguity. A flex:1
+   height resolved independently of width (the previous approach) could
+   produce a box whose ratio didn't quite match the image's, which then
+   either letterboxed (misaligning every percent-positioned hotspot) or, if
+   that sizing JS ever threw, left the whole slide blank. This can't do
+   either: it's pure CSS, and the box's own ratio is the image's ratio by
+   construction. */
 .info-map {
   position: relative;
-  flex: 1;
-  margin-top: clamp(16px, 3.5vh, 36px);
-  min-height: 0;
+  width: 100%;
   max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: clamp(16px, 3.5vh, 36px) auto 0;
+}
+/* This page has a visible heading above the diagram (the other 2 info pages
+   use an sr-only one), which left unequal space below it — auto top/bottom
+   margins on a flex column's child split the remaining vertical space
+   evenly above and below instead of letting it all collect underneath. */
+#slide-ecostruxure .info-map,
+#slide-architecture .info-map,
+#slide-whatfor .info-map {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .info-map__image {
   position: absolute;
@@ -807,84 +851,61 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   display: block;
 }
 
-/* EcoStruxure page hotspots: no baked-in marker on the source diagram, so
-   draw the usual green glowing ring + label (same visual language as the
-   product hotspots elsewhere on the site). */
 .info-hotspot {
   position: absolute;
+  z-index: 3;
+}
+
+/* EcoStruxure page hotspots: a real rectangle sized/positioned to exactly
+   match each colored row in the diagram (left/top/width/height percentages
+   measured from the source PNG's own pixels), invisible at rest and
+   glowing green on hover/focus — no dot/ring marker needed since the box
+   itself is the hit area. */
+.info-hotspot--rect {
+  left: var(--x); top: var(--y); width: var(--w); height: var(--h);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background: transparent;
+  transition: background var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.info-hotspot--rect:hover,
+.info-hotspot--rect:focus-visible {
+  background: rgba(255,255,255,.10);
+  border-color: #ffffff;
+  box-shadow: 0 0 24px 6px rgba(61,205,88,.85), inset 0 0 24px 4px rgba(61,205,88,.4);
+}
+
+/* "What for?" page: the source diagram already has a black circle + white
+   plus baked in at each of the 6 spots (each ~3.7% of the image's own
+   width), so this variant is just an invisible click target sized to match
+   that circle — not a fixed size guessed independently of the artwork —
+   with a continuous soft pulse so it reads as interactive even before
+   hovering, plus a brighter glow ring on hover/focus. */
+.info-hotspot--bare {
   left: var(--x);
   top: var(--y);
   transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
-  z-index: 3;
-  width: clamp(50px, 5vw, 80px);
-}
-.info-hotspot__ring {
-  width: 15px; height: 15px;
+  width: clamp(24px, 3.7vw, 42px);
+  height: clamp(24px, 3.7vw, 42px);
   border-radius: 50%;
-  border: 2px solid #ffffff;
-  background: var(--se-green-bright);
-  box-shadow: 0 0 6px 2px rgba(61,205,88,.9);
-  animation: hotspot-glow 2.2s ease-in-out infinite;
-  transition: transform var(--t-fast) var(--ease-out), background var(--t-fast);
+  box-shadow: 0 0 0 0 rgba(61,205,88,.55);
+  animation: hotspot-pulse-ring 2s ease-in-out infinite;
+  animation-delay: 0s;
+  transition: filter var(--t-fast);
 }
-.info-hotspot:hover .info-hotspot__ring,
-.info-hotspot:focus-visible .info-hotspot__ring {
-  transform: scale(1.45);
-  background: #ffffff;
-  border-color: var(--se-green-bright);
+@keyframes hotspot-pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(61,205,88,.55); }
+  50%      { box-shadow: 0 0 14px 5px rgba(61,205,88,.85); }
 }
-.info-hotspot__label {
-  position: absolute;
-  top: calc(100% + 4px);
-  max-width: 160px;
-  white-space: nowrap;
-  font-size: .58rem;
-  font-weight: 700;
-  letter-spacing: .03em;
-  color: var(--slate-900);
-  background: var(--se-green-bright);
-  padding: .14rem .5rem;
-  border-radius: 999px;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity var(--t-fast), transform var(--t-fast);
-  pointer-events: none;
-}
-.info-hotspot:hover .info-hotspot__label,
-.info-hotspot:focus-visible .info-hotspot__label { opacity: 1; transform: translateY(0); }
-
-/* "What for?" page: the source diagram already has a black circle + white
-   plus baked in at each of the 6 spots, so this variant is just an
-   invisible click target with a soft glow ring on hover/focus to confirm
-   it's interactive, instead of drawing a second marker on top. */
-.info-hotspot--bare {
-  width: clamp(46px, 4.2vw, 64px);
-  height: clamp(46px, 4.2vw, 64px);
-  border-radius: 50%;
-  transition: box-shadow var(--t-fast);
-}
+/* Hover/focus feedback uses filter (not box-shadow, not animation-play-state)
+   on purpose: box-shadow is already owned by the pulse keyframes above, and
+   pausing/resuming an individual element's animation on hover would drift
+   its internal clock out of sync with the other 5, which all keep running
+   on the same untouched timeline. filter layers on top without touching
+   either. */
 .info-hotspot--bare:hover,
 .info-hotspot--bare:focus-visible {
-  box-shadow: 0 0 0 6px rgba(61,205,88,.35);
-}
-
-/* Electrical Architecture page: glow that singles out the "Power Products"
-   legend box without touching the other 5 (Industrial Automation, Digital
-   Energy, Power Systems, Secure Power, Home Solutions). */
-.architecture-highlight {
-  position: absolute;
-  left: var(--x); top: var(--y); width: var(--w); height: var(--h);
-  border-radius: 6px;
-  border: 3px solid var(--se-green-bright);
-  box-shadow: 0 0 0 0 rgba(61,205,88,.7);
-  animation: hotspot-glow-box 2.2s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes hotspot-glow-box {
-  0%, 100% { box-shadow: 0 0 8px 2px rgba(61,205,88,.6); }
-  50%      { box-shadow: 0 0 18px 7px rgba(61,205,88,.9); }
+  filter: drop-shadow(0 0 6px rgba(61,205,88,.9)) drop-shadow(0 0 10px rgba(61,205,88,.6));
 }
 
 /* =========================================================
