@@ -263,13 +263,14 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   flex: 1;
   margin-top: clamp(16px, 3.5vh, 36px);
   min-height: 0;
-  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   /* Width/height are set in px by app.js (sizeSegmentsMap) to exactly match the
      image's real aspect ratio within the available space — eliminates the
      letterbox bars that a fixed CSS aspect-ratio + object-fit:contain produced,
-     and avoids fighting with flex:1 the way a static aspect-ratio did. */
+     and avoids fighting with flex:1 the way a static aspect-ratio did.
+     No CSS max-width here on purpose — see SEGMENTS_MAP_MAX_WIDTH in app.js,
+     which caps width and height together via the same scale factor instead. */
   aspect-ratio: 16 / 9;
 }
 
@@ -297,87 +298,73 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   width: clamp(120px, 16vw, 180px);
 }
 
-/* PrismaSeT P hotspot — sized and positioned to exactly cover the green
-   "≤ 3200A PrismaSeT P" box in the diagram, no ring/label, just the box itself.
-   Position/size are computed at runtime in app.js (positionPrismasetHotspot),
-   since the box's rendered position depends on the actual letterboxing of the
-   diagram image, which CSS percentages alone can't reliably account for. */
+/* Every segment box — sized and positioned at runtime in app.js
+   (positionSegmentHotspots), since the box's rendered position depends on
+   the actual letterboxing of the diagram image, which CSS percentages
+   alone can't reliably account for. */
 .segments-map__hotspot--box {
   left: 0;
   top: 0;
   transform: none;
 }
-/* Hover-to-grow: each hotspot button is a fully invisible hit-area (no glow,
-   no ring, nothing of its own). Its sibling photo is hidden at rest and
-   pops up + scales larger on hover/focus, via a plain CSS transition on
-   opacity/transform — deliberately not @keyframes animation, since that
-   proved unreliable here; transition on transform/opacity is about the
-   most basic, universally-supported animation technique there is.
-   The shadow uses filter:drop-shadow, not box-shadow: the 3 L-shaped
-   segment photos (Okken, PrismaSet G, PrismaSet XS Resi9) have a real
-   transparent notch baked into their own image content (their own
-   rectangular canvas doesn't fully fill with the segment's shape) —
-   box-shadow always outlines the full rectangle regardless of
-   transparency, which drew a visible "box" over that empty notch.
-   drop-shadow traces the actual visible (non-transparent) pixels only. */
-.segments-map__hotspot-photo {
+/* Hover-to-grow, reworked: every segment now gets the exact same
+   treatment — a glowing border box, invisible at rest, that scales up in
+   place on hover/focus. Plain opacity/transform transition (not
+   @keyframes), same reasoning as elsewhere in this app: transform+
+   clip-path combos proved unreliable here, so this sticks to the simplest
+   possible technique.
+   The glow itself uses filter:drop-shadow, not box-shadow: box-shadow's
+   spread gets hard-clipped right at the clip-path boundary (see
+   PanelSeT SFN below), which left only the white border visible with no
+   green halo around it — drop-shadow is a filter effect that still
+   renders around the actual (possibly clipped) visible shape, so every
+   segment glows the same green regardless of whether it's clipped. */
+.segments-map__hotspot-glow {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 10;
   opacity: 0;
-  transform: scale(.97);
+  transform: scale(1);
   transform-origin: center;
   pointer-events: none;
-  object-fit: contain;
-  border-radius: 8px;
-  filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
-  transition: opacity .2s ease, transform .2s ease;
+  border-radius: 6px;
+  border: 3px solid #ffffff;
+  filter: drop-shadow(0 0 0 rgba(61,205,88,0));
+  transition: opacity .2s ease, transform .2s ease, filter .2s ease;
 }
-/* The 3 L-shaped segments (Okken, PrismaSet G, PrismaSet XS Resi9) use an
-   SVG with the real notch shape already baked into its own canvas, sized
-   in JS to exactly fill the box (see SHAPE_FILL_IDS in app.js) — object-fit
-   :contain would override that by re-centering the SVG's own aspect ratio
-   inside the box again, undoing the fix and reproducing the same
-   off-center "shift" look. fill stretches it to match the box exactly.
-   These 3 also grow via plain left/top/width/height transitions instead
-   of transform:scale — combining transform with clip-path on these
-   L-shapes rendered as a shrink/shift instead of a grow, so the more
-   basic layout-property transition is used here instead.
-   No border-radius or drop-shadow here either: these are flat-colored
-   blocks straight from the diagram, not product photos — rounding the
-   corners and adding a shadow made them look like a separate floating
-   card instead of the same segment growing in place. The grow itself is
-   a much smaller 2% (vs the 6% used by the plain-photo segments) so it
-   reads as a subtle in-place highlight rather than visibly spilling
-   over the diagram's real seams into neighboring segments. */
-.segments-map__hotspot-photo--shape {
-  object-fit: fill;
-  transform: none;
-  border-radius: 0;
-  filter: none;
-  left: var(--box-left);
-  top: var(--box-top);
-  width: var(--box-w);
-  height: var(--box-h);
-  transition: opacity .2s ease, left .2s ease, top .2s ease, width .2s ease, height .2s ease;
-}
-.segments-map__hotspot--box:hover + .segments-map__hotspot-photo:not(.segments-map__hotspot-photo--shape),
-.segments-map__hotspot--box:focus-visible + .segments-map__hotspot-photo:not(.segments-map__hotspot-photo--shape) {
+.segments-map__hotspot--box:hover + .segments-map__hotspot-glow,
+.segments-map__hotspot--box:focus-visible + .segments-map__hotspot-glow {
   opacity: 1;
-  transform: scale(1.06);
+  /* A small 2% grow (not the original 4%) — on the smaller segments (e.g.
+     PrismaSeT HD), 4% visibly overshot the box into its neighbors; the
+     drop-shadow halo already reads as "interactive" on its own, so the
+     box itself doesn't need to grow much to sell the effect. */
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 10px rgba(61,205,88,.9)) drop-shadow(0 0 22px rgba(61,205,88,.7));
 }
-.segments-map__hotspot--box:hover + .segments-map__hotspot-photo--shape,
-.segments-map__hotspot--box:focus-visible + .segments-map__hotspot-photo--shape {
-  opacity: 1;
-  left: calc(var(--box-left) - var(--box-w) * 0.01);
-  top: calc(var(--box-top) - var(--box-h) * 0.01);
-  width: calc(var(--box-w) * 1.02);
-  height: calc(var(--box-h) * 1.02);
+
+/* PanelSeT SFN is the one L-shaped (notched) segment in the current
+   diagram — its top-left corner is cut away under Okken's box. clip-path
+   matches that exact notch (measured from the source PNG's own pixels:
+   the cut spans the left 30% of the box's width and the top 16.78% of its
+   height), applied to both the hit-area and its glow so the glow reads as
+   the real L shape instead of a rectangle spilling into the notch.
+   No transform:scale on hover here unlike the other segments: combining
+   transform with clip-path on an L-shape rendered as a shrink/shift
+   instead of a grow in this browser before (see the segments-map hotspot
+   history), so this one only intensifies via the drop-shadow glow. */
+#hotspotPanelsetSFN,
+#hotspotPanelsetSFN-glow {
+  clip-path: polygon(0% 0%, 30% 0%, 30% 16.78%, 100% 16.78%, 100% 100%, 0% 100%);
+}
+#hotspotPanelsetSFN:hover + #hotspotPanelsetSFN-glow,
+#hotspotPanelsetSFN:focus-visible + #hotspotPanelsetSFN-glow {
+  transform: scale(1);
 }
 
 /* =========================================================
-   Prompt 3 — SLIDE 3 (PrismaSeT P 3200A dashboard)
+   Prompt 3 — SLIDE 3 (PrismaSeT P dashboard)
    ========================================================= */
 .slide--dashboard {
   background:
@@ -494,6 +481,8 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   gap: 6px;
   min-width: 0;
   min-height: 0;
+  position: relative;
+  perspective: 1000px;
 }
 
 /* Reverse-triangle layout: two connected configs on top, Easy Non-connected as the point below.
@@ -558,6 +547,19 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 
 .panel__caption {
   text-align: center;
+  /* Width is set in app.js (sizeBoards) to match the board above it exactly,
+     since the board itself is now sized to the image's real aspect ratio
+     rather than always stretching to the panel's full width. This outer
+     element is just a centering container now — it has no background/
+     border of its own, so it doesn't matter that it still spans the full
+     board width; only .panel__caption-text (sized to the text itself) is
+     visible and hoverable. */
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.panel__caption-text {
+  display: inline-block;
   font-weight: 700;
   font-size: .95rem;
   color: #eafbef;
@@ -565,12 +567,60 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: .6rem .8rem;
-  /* Width is set in app.js (sizeBoards) to match the board above it exactly,
-     since the board itself is now sized to the image's real aspect ratio
-     rather than always stretching to the panel's full width. */
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
+  cursor: help;
+  position: relative;
+  z-index: 41; /* stay above .switchboard-tip so it's still clickable/hoverable while the tip is open */
+}
+
+/* Short switchboard description, shown over the photo when hovering/
+   focusing its caption — deliberately a different animation from every
+   other popup on the site (drawer slides in, comments popup scales in,
+   hotspots/segments glow): this one flips open downward like a visor,
+   3D-rotated on .panel's perspective with a bouncy overshoot easing. */
+.switchboard-tip {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  padding: 20px 22px;
+  background: linear-gradient(165deg, rgba(10,20,16,.97), rgba(22,40,30,.97));
+  border: 1px solid var(--se-green-bright);
+  border-radius: 12px;
+  box-shadow: 0 22px 55px rgba(0,0,0,.55);
+  color: #eafbef;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: top center;
+  transform: rotateX(-100deg);
+  transition: opacity .3s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1);
+  backface-visibility: hidden;
+}
+.switchboard-tip h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: var(--se-green-bright);
+  text-transform: uppercase;
+}
+.switchboard-tip p {
+  font-size: .92rem;
+  line-height: 1.5;
+  color: #d8f5e0;
+}
+/* :has() lets the hover/focus state of the inner text-sized span (the only
+   visible/hoverable part of the caption) reach this sibling selector,
+   which otherwise only sees the outer full-width figcaption — that's what
+   keeps the trigger area limited to just the text, not the whole
+   board-width caption row. */
+.panel__caption:has(.panel__caption-text:hover) ~ .switchboard-tip,
+.panel__caption:has(.panel__caption-text:focus-visible) ~ .switchboard-tip {
+  opacity: 1;
+  transform: rotateX(0deg);
+  pointer-events: auto;
 }
 
 /* Hotspots — green accent rings (Prompt 3) */
@@ -842,6 +892,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   margin-top: auto;
   margin-bottom: auto;
 }
+/* This diagram reads fine wider than the other two info pages' shared
+   1100px cap — hotspots are percent-based so they track the box's new
+   size automatically, no repositioning needed. */
+#slide-ecostruxure .info-map,
+#slide-architecture .info-map {
+  max-width: 1700px;
+}
 .info-map__image {
   position: absolute;
   inset: 0;
@@ -849,6 +906,25 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+/* Electrical Architecture page: the "Power Products" column already has a
+   static green box drawn into the artwork itself — this retraces that
+   same box (position measured from the image's own pixels) with a
+   continuously pulsing border/glow layered exactly on top, so the
+   existing box pulses instead of a second, separate highlight being
+   added next to it. */
+.architecture-highlight {
+  position: absolute;
+  left: var(--x); top: var(--y); width: var(--w); height: var(--h);
+  border-radius: 6px;
+  border: 4px solid rgba(61,205,88,.9);
+  pointer-events: none;
+  animation: architecture-pulse 2s ease-in-out infinite;
+}
+@keyframes architecture-pulse {
+  0%, 100% { box-shadow: 0 0 6px 2px rgba(61,205,88,.5); }
+  50%      { box-shadow: 0 0 26px 10px rgba(61,205,88,.9); }
 }
 
 .info-hotspot {
@@ -911,10 +987,6 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 /* =========================================================
    Prompt 6 — Responsiveness
    ========================================================= */
-@media (max-width: 980px) {
-  .segments-map { max-width: none; }
-}
-
 @media (max-width: 860px) {
   /* Three full-size photos can't all fit one screen at a legible size on small
      devices — let this slide scroll here instead of clipping content. */

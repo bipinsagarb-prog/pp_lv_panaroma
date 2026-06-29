@@ -315,12 +315,16 @@ const slides      = {
   whatfor:     document.getElementById("slide-whatfor"),
   segments:  document.getElementById("slide-segments"),
   dashboard: document.getElementById("slide-dashboard"),
-  machineControlPanel: document.getElementById("slide-machineControlPanel"),
-  mccUe:               document.getElementById("slide-mccUe"),
-  xsSG:                document.getElementById("slide-xsSG"),
-  xsResi9:              document.getElementById("slide-xsResi9"),
-  prismasetG:           document.getElementById("slide-prismasetG"),
-  okken:                document.getElementById("slide-okken")
+  prismaset6300: document.getElementById("slide-prismaset6300"),
+  prismasetHD:   document.getElementById("slide-prismasetHD"),
+  panelsetSFN:   document.getElementById("slide-panelsetSFN"),
+  prismasetG:    document.getElementById("slide-prismasetG"),
+  prismasetXsS:  document.getElementById("slide-prismasetXsS"),
+  ueWallMounted: document.getElementById("slide-ueWallMounted"),
+  okken:         document.getElementById("slide-okken"),
+  prismasetCF:   document.getElementById("slide-prismasetCF"),
+  pcc:           document.getElementById("slide-pcc"),
+  mccPcc:        document.getElementById("slide-mccPcc")
 };
 const stage       = document.getElementById("stage");
 const backToSegmentsBtn = document.getElementById("backToSegmentsBtn");
@@ -641,20 +645,29 @@ function closeDrawer() {
    fits the available space exactly). The hotspot is derived from this same
    live size, so it stays proportionate automatically with no distortion.
    ========================================================= */
-const SEGMENTS_MAP_SCALE_MULTIPLIER = 2.5;
+const SEGMENTS_MAP_SCALE_MULTIPLIER = 2.7;
+// Ceiling on the rendered width, enforced here (not via CSS max-width) so it
+// always clamps width and height together using the same scale factor. A
+// plain CSS max-width on .segments-map would clamp only the width once the
+// *2.5(ish) multiplier above pushed it past that cap, while height (no
+// matching max-height rule) kept growing unclamped — silently distorting
+// the box away from the image's real aspect ratio and reintroducing the
+// letterboxing this whole function exists to avoid.
+const SEGMENTS_MAP_MAX_WIDTH = 1700;
 
 function sizeSegmentsMap() {
   const map = document.querySelector(".segments-map");
   const img = document.querySelector(".segments-map__image");
   if (!map || !img || !img.naturalWidth) return;
 
-  // Clear any previous explicit size so CSS (flex:1/min-height:0/max-width/aspect-ratio)
+  // Clear any previous explicit size so CSS (flex:1/min-height:0/aspect-ratio)
   // re-establishes the maximum available bounding box to measure against.
   map.style.width = "";
   map.style.height = "";
   const boundW = map.clientWidth, boundH = map.clientHeight;
   const nw = img.naturalWidth, nh = img.naturalHeight;
-  const scale = Math.min(boundW / nw, boundH / nh) * SEGMENTS_MAP_SCALE_MULTIPLIER;
+  let scale = Math.min(boundW / nw, boundH / nh) * SEGMENTS_MAP_SCALE_MULTIPLIER;
+  scale = Math.min(scale, SEGMENTS_MAP_MAX_WIDTH / nw);
 
   map.style.width  = Math.round(nw * scale) + "px";
   map.style.height = Math.round(nh * scale) + "px";
@@ -665,22 +678,32 @@ function sizeSegmentsMap() {
    colored box in the diagram. CSS percentages alone can't do this reliably
    because the segments map's own size is computed dynamically above, so each
    hotspot must be derived from the same live measurements. Percentages were
-   measured directly from the source PNG's pixels (segments-layout.png).
-   ========================================================= */
-const SEGMENT_HOTSPOTS = [
-  { id: "prismasetPCard",            box: { left: 66.708, right: 81.429, top: 17.857, bottom: 46.164 } },
-  { id: "hotspotMachineControlPanel", box: { left: 33.107, right: 90.822, top: 1.852,  bottom: 14.153 } },
-  { id: "hotspotMccUe",               box: { left: 93.040, right: 99.938, top: 1.852,  bottom: 30.159 } },
-  { id: "hotspotXsSG",                box: { left: 49.923, right: 99.969, top: 65.873, bottom: 78.307 } },
-  { id: "hotspotXsResi9",             box: { left: 16.323, right: 47.829, top: 1.852,  bottom: 78.307 } },
-  { id: "hotspotPrismasetG",          box: { left: 33.108, right: 94.949, top: 17.857, bottom: 62.368 } },
-  { id: "hotspotOkken",               box: { left: 83.523, right: 94.949, top: 17.857, bottom: 46.230 } }
-];
+   measured directly from the source PNG's pixels (segments-layout.png),
+   via connected-component analysis per color (green/PrismaSeT, dark/
+   PanelSeT, brown/Okken) so touching boxes of different colors don't get
+   merged into one region.
 
-// These 3 segments use an SVG whose own canvas already has the segment's
-// real L-shaped notch baked in (not a plain rectangular photo) — they
-// should stretch to exactly fill their box rather than aspect-fit/center.
-const SHAPE_FILL_IDS = new Set(["hotspotXsResi9", "hotspotPrismasetG", "hotspotOkken"]);
+   8 of these 9 boxes are plain rectangles, so they all use the same
+   highlight-on-hover treatment (see .segments-map__hotspot-glow in
+   style.css): a glowing border box that grows in place, no swapped-in
+   product photo required. PanelSeT SFN ("hotspotPanelsetSFN") is the one
+   exception — it has a real L-shaped notch (cut away under Okken's box),
+   handled via a clip-path override scoped to just that id in style.css,
+   same box left/top/width/height from here, just clipped to the actual
+   shape instead of the full rectangle. */
+const SEGMENT_HOTSPOTS = [
+  { id: "prismasetPCard",       box: { left: 28.03, right: 50.76, top: 35.81, bottom: 52.22 } },
+  { id: "hotspotPrismaset6300", box: { left: 28.10, right: 50.98, top: 25.68, bottom: 34.83 } },
+  { id: "hotspotPrismasetHD",   box: { left: 51.05, right: 58.38, top: 35.69, bottom: 52.73 } },
+  { id: "hotspotPanelsetSFN",   box: { left: 59.35, right: 81.68, top: 35.69, bottom: 61.43 } },
+  { id: "hotspotPrismasetG",    box: { left: 14.79, right: 58.38, top: 53.20, bottom: 61.43 } },
+  { id: "hotspotPrismasetXsS",  box: { left: 5.06,  right: 38.58, top: 62.81, bottom: 72.08 } },
+  { id: "hotspotUeWallMounted", box: { left: 39.22, right: 81.71, top: 61.26, bottom: 73.00 } },
+  { id: "hotspotOkken",         box: { left: 66.78, right: 92.57, top: 17.67, bottom: 38.86 } },
+  { id: "hotspotPrismasetCF",   box: { left: 82.41, right: 92.64, top: 39.90, bottom: 72.02 } },
+  { id: "hotspotPcc",           box: { left: 14.95, right: 65.58, top: 74.55, bottom: 80.14 } },
+  { id: "hotspotMccPcc",        box: { left: 66.75, right: 92.57, top: 74.50, bottom: 80.14 } }
+];
 
 function positionSegmentHotspots() {
   const map = document.querySelector(".segments-map");
@@ -707,49 +730,12 @@ function positionSegmentHotspots() {
       hotspot.style.height = height + "px";
     }
 
-    const photo = document.getElementById(id + "-photo");
-    if (photo) {
-      let photoW = width, photoH = height, photoLeft = left, photoTop = top;
-      if (!SHAPE_FILL_IDS.has(id) && photo.naturalWidth) {
-        // Plain rectangular product photos (the 4 simple segments) don't
-        // match their box's aspect ratio, so fit (not stretch) them inside
-        // it — like object-fit:contain, computed in JS so the <img>'s own
-        // border-box hugs the actual picture instead of leaving a big
-        // transparent margin (visible via its drop-shadow).
-        // The 3 L-shaped segments (see SHAPE_FILL_IDS below) already have
-        // their real notch shape baked into their own SVG canvas, so they
-        // skip this and just stretch to exactly fill the box instead —
-        // fitting them centered would otherwise shift them off the segment
-        // they're meant to sit on.
-        const photoRatio = photo.naturalWidth / photo.naturalHeight;
-        const boxRatio = width / height;
-        if (photoRatio > boxRatio) {
-          photoW = width;
-          photoH = width / photoRatio;
-        } else {
-          photoH = height;
-          photoW = height * photoRatio;
-        }
-        photoLeft = left + (width - photoW) / 2;
-        photoTop  = top  + (height - photoH) / 2;
-      }
-      if (SHAPE_FILL_IDS.has(id)) {
-        // These 3 use width/height/left/top transitions (via CSS custom
-        // properties), not transform:scale — combining transform with
-        // clip-path on these L-shapes was rendering as a shrink/shift
-        // instead of a grow in this browser, so plain layout-property
-        // transitions are used instead, same as the rest of this app's
-        // animations that avoid transform+clip-path/filter combos.
-        photo.style.setProperty("--box-left", photoLeft + "px");
-        photo.style.setProperty("--box-top",  photoTop  + "px");
-        photo.style.setProperty("--box-w",    photoW    + "px");
-        photo.style.setProperty("--box-h",    photoH    + "px");
-      } else {
-        photo.style.left   = photoLeft + "px";
-        photo.style.top    = photoTop  + "px";
-        photo.style.width  = photoW    + "px";
-        photo.style.height = photoH    + "px";
-      }
+    const glow = document.getElementById(id + "-glow");
+    if (glow) {
+      glow.style.left   = left   + "px";
+      glow.style.top    = top    + "px";
+      glow.style.width  = width  + "px";
+      glow.style.height = height + "px";
     }
   });
 }
@@ -765,16 +751,6 @@ if (document.querySelector(".segments-map__image").complete) {
   document.querySelector(".segments-map__image").addEventListener("load", layoutSegmentsMap);
 }
 window.addEventListener("resize", layoutSegmentsMap);
-
-// Each segment photo's own aspect ratio is needed to size it correctly
-// (see positionSegmentHotspots) — re-run positioning once each one loads,
-// since naturalWidth isn't available until then.
-SEGMENT_HOTSPOTS.forEach(({ id }) => {
-  const photo = document.getElementById(id + "-photo");
-  if (photo && !photo.complete) {
-    photo.addEventListener("load", positionSegmentHotspots);
-  }
-});
 
 /* =========================================================
    The 3 info pages between title and segments (EcoStruxure solutions,
@@ -861,14 +837,18 @@ window.addEventListener("resize", sizeBoards);
 /* =========================================================
    Wiring
    ========================================================= */
-document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("ecostruxure"));
+document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("architecture"));
 document.getElementById("prismasetPCard").addEventListener("click", () => goToSlide("dashboard"));
 
-/* The 3 info pages' Previous/Next buttons (top-right, same as Back to Start/Segments) */
+/* The info pages' Previous/Next buttons (top-right, same as Back to Start/
+   Segments). Order: Title -> Architecture (Energy Management) ->
+   EcoStruxure -> Segments. "whatfor" is disabled (not part of this chain,
+   so it's unreachable via Previous/Next) but deliberately not removed —
+   see the commented-out entry below for how to re-enable it. */
 const INFO_PAGE_NAV = {
-  ecostruxure:  { prev: "title",        next: "architecture" },
-  architecture: { prev: "ecostruxure",  next: "whatfor" },
-  whatfor:      { prev: "architecture", next: "segments" }
+  architecture: { prev: "title",        next: "ecostruxure" },
+  ecostruxure:  { prev: "architecture", next: "segments" }
+  // whatfor:   { prev: "ecostruxure",  next: "segments" }
 };
 Object.entries(INFO_PAGE_NAV).forEach(([slideName, { prev, next }]) => {
   const prevBtn = document.getElementById("prevFrom" + slideName[0].toUpperCase() + slideName.slice(1));
@@ -888,12 +868,16 @@ document.querySelectorAll(".info-hotspot").forEach(h => {
 
 /* Each non-PrismaSeT-P segment hotspot opens its own simple info page */
 const SEGMENT_PAGE_LINKS = {
-  hotspotMachineControlPanel: "machineControlPanel",
-  hotspotMccUe:               "mccUe",
-  hotspotXsSG:                "xsSG",
-  hotspotXsResi9:              "xsResi9",
-  hotspotPrismasetG:           "prismasetG",
-  hotspotOkken:                "okken"
+  hotspotPrismaset6300: "prismaset6300",
+  hotspotPrismasetHD:   "prismasetHD",
+  hotspotPanelsetSFN:   "panelsetSFN",
+  hotspotPrismasetG:    "prismasetG",
+  hotspotPrismasetXsS:  "prismasetXsS",
+  hotspotUeWallMounted: "ueWallMounted",
+  hotspotOkken:         "okken",
+  hotspotPrismasetCF:   "prismasetCF",
+  hotspotPcc:           "pcc",
+  hotspotMccPcc:        "mccPcc"
 };
 Object.entries(SEGMENT_PAGE_LINKS).forEach(([hotspotId, slideName]) => {
   const el = document.getElementById(hotspotId);
@@ -901,23 +885,28 @@ Object.entries(SEGMENT_PAGE_LINKS).forEach(([hotspotId, slideName]) => {
 });
 
 const SEGMENT_PAGE_BACK_BUTTONS = {
-  backToSegmentsFromMachineControlPanel: "segments",
-  backToSegmentsFromMccUe:               "segments",
-  backToSegmentsFromXsSG:                "segments",
-  backToSegmentsFromXsResi9:             "segments",
-  backToSegmentsFromPrismasetG:          "segments",
-  backToSegmentsFromOkken:               "segments"
+  backToSegmentsFromPrismaset6300: "segments",
+  backToSegmentsFromPrismasetHD:   "segments",
+  backToSegmentsFromPanelsetSFN:   "segments",
+  backToSegmentsFromPrismasetG:    "segments",
+  backToSegmentsFromPrismasetXsS:  "segments",
+  backToSegmentsFromUeWallMounted: "segments",
+  backToSegmentsFromOkken:         "segments",
+  backToSegmentsFromPrismasetCF:   "segments",
+  backToSegmentsFromPcc:           "segments",
+  backToSegmentsFromMccPcc:        "segments"
 };
 Object.entries(SEGMENT_PAGE_BACK_BUTTONS).forEach(([btnId, slideName]) => {
   const el = document.getElementById(btnId);
   if (el) el.addEventListener("click", () => goToSlide(slideName));
 });
 
-/* Segments' Previous mirrors the "What for?" page's Next button
-   (Title -> EcoStruxure -> Architecture -> What for? -> Segments). The 6
-   detail pages don't get one: they're sibling pages reached via a hotspot,
-   not a linear sequence, and already have a "Back to Segments" button. */
-document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("whatfor"));
+/* Segments' Previous mirrors the EcoStruxure page's Next button
+   (Title -> Architecture -> EcoStruxure -> Segments; "What for?" is
+   disabled, see INFO_PAGE_NAV above). The segment detail pages don't get
+   one: they're sibling pages reached via a hotspot, not a linear
+   sequence, and already have a "Back to Segments" button. */
+document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("ecostruxure"));
 
 document.querySelectorAll(".hotspot").forEach(h => {
   h.addEventListener("click", e => {
@@ -931,7 +920,7 @@ backToSegmentsBtn.addEventListener("click", () => goToSlide("segments"));
 document.getElementById("drawerClose").addEventListener("click", () => resetZoom());
 drawerScrim.addEventListener("click", () => resetZoom());
 
-const SEGMENT_DETAIL_SLIDES = ["machineControlPanel", "mccUe", "xsSG", "xsResi9", "prismasetG", "okken"];
+const SEGMENT_DETAIL_SLIDES = ["prismaset6300", "prismasetHD", "panelsetSFN", "prismasetG", "prismasetXsS", "ueWallMounted", "okken", "prismasetCF", "pcc", "mccPcc"];
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
@@ -1057,9 +1046,9 @@ window.addEventListener("resize", () => {
   function labelForSlide(slide) {
     if (slide === "title") return "Title page";
     if (slide === "ecostruxure") return "EcoStruxure solutions";
-    if (slide === "architecture") return "Power Products in Electrical Architecture";
+    if (slide === "architecture") return "Energy Management";
     if (slide === "whatfor") return "Power Products: What for?";
-    if (slide === "segments") return "Market segments";
+    if (slide === "segments") return "Low Voltage Segmentation by Matrix";
     if (slide === "dashboard") return "PrismaSeT P dashboard";
     if (slide.startsWith("drawer-")) {
       const id = slide.slice(7);
