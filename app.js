@@ -841,14 +841,15 @@ document.getElementById("exploreBtn").addEventListener("click", () => goToSlide(
 document.getElementById("prismasetPCard").addEventListener("click", () => goToSlide("dashboard"));
 
 /* The info pages' Previous/Next buttons (top-right, same as Back to Start/
-   Segments). Order: Title -> Architecture (Energy Management) ->
-   EcoStruxure -> Segments. "whatfor" is disabled (not part of this chain,
-   so it's unreachable via Previous/Next) but deliberately not removed —
-   see the commented-out entry below for how to re-enable it. */
+   Segments). Order: Title -> Architecture (Energy Management) -> Segments.
+   "ecostruxure" and "whatfor" are both disabled (not part of this chain,
+   so neither is reachable via Previous/Next) but deliberately not
+   removed — see the commented-out entries below for how to re-enable
+   either one. */
 const INFO_PAGE_NAV = {
-  architecture: { prev: "title",        next: "ecostruxure" },
-  ecostruxure:  { prev: "architecture", next: "segments" }
-  // whatfor:   { prev: "ecostruxure",  next: "segments" }
+  architecture: { prev: "title", next: "segments" }
+  // ecostruxure: { prev: "architecture", next: "segments" },
+  // whatfor:     { prev: "ecostruxure",  next: "segments" }
 };
 Object.entries(INFO_PAGE_NAV).forEach(([slideName, { prev, next }]) => {
   const prevBtn = document.getElementById("prevFrom" + slideName[0].toUpperCase() + slideName.slice(1));
@@ -901,12 +902,12 @@ Object.entries(SEGMENT_PAGE_BACK_BUTTONS).forEach(([btnId, slideName]) => {
   if (el) el.addEventListener("click", () => goToSlide(slideName));
 });
 
-/* Segments' Previous mirrors the EcoStruxure page's Next button
-   (Title -> Architecture -> EcoStruxure -> Segments; "What for?" is
-   disabled, see INFO_PAGE_NAV above). The segment detail pages don't get
-   one: they're sibling pages reached via a hotspot, not a linear
+/* Segments' Previous mirrors the Architecture page's Next button
+   (Title -> Architecture -> Segments; "EcoStruxure" and "What for?" are
+   both disabled, see INFO_PAGE_NAV above). The segment detail pages don't
+   get one: they're sibling pages reached via a hotspot, not a linear
    sequence, and already have a "Back to Segments" button. */
-document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("ecostruxure"));
+document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("architecture"));
 
 document.querySelectorAll(".hotspot").forEach(h => {
   h.addEventListener("click", e => {
