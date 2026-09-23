@@ -776,7 +776,7 @@ window.addEventListener("resize", layoutSegmentsMap);
    "fill the cell completely" to go: 0 = identical to the no-crop sizing above,
    1 = fill the cell exactly (maximum crop). 0.5 splits the difference.
    ========================================================= */
-const FULL_BLEED_CONFIGS = ["Optimum connected wireless", "Easy Non-connected"];
+const FULL_BLEED_CONFIGS = [];
 const FULL_BLEED_BLEND = 0.5;
 
 function sizeBoards() {

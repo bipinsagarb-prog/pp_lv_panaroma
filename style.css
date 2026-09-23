@@ -478,6 +478,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 .panel {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 6px;
   min-width: 0;
   min-height: 0;
@@ -485,10 +486,10 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   perspective: 1000px;
 }
 
-/* Reverse-triangle layout: two connected configs on top, Easy Non-connected as the point below.
-   Both rows are height-driven (flex:1 sharing .panels-row's space equally) so the whole
-   group always fits the viewport with no scrolling, and top/bottom panels end up the same
-   width AND the same height — i.e. identical size. */
+/* Two panels side by side, filling the full stage height.
+   boards are sized by sizeBoards() to their image's natural ratio;
+   justify-content: center on .panel then vertically centers each board
+   so the remaining space is split equally above and below. */
 .panels-top-row {
   flex: 1 1 0;
   min-height: 0;
@@ -537,13 +538,6 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
   display: block;
 }
 
-/* These two panels fill their full cell and crop to it (no contain-fit, no
-   empty space) so the switchboard itself reads as large as possible — see
-   sizeBoards() in app.js, which skips the aspect-fit sizing for them. */
-.panel[data-config="Optimum connected wireless"] .board__image,
-.panel[data-config="Easy Non-connected"] .board__image {
-  object-fit: cover;
-}
 
 .panel__caption {
   text-align: center;
