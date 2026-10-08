@@ -837,7 +837,7 @@ window.addEventListener("resize", sizeBoards);
 /* =========================================================
    Wiring
    ========================================================= */
-document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("architecture"));
+document.getElementById("exploreBtn").addEventListener("click", () => goToSlide("segments"));
 document.getElementById("prismasetPCard").addEventListener("click", () => goToSlide("dashboard"));
 
 /* The info pages' Previous/Next buttons (top-right, same as Back to Start/
@@ -847,7 +847,7 @@ document.getElementById("prismasetPCard").addEventListener("click", () => goToSl
    removed — see the commented-out entries below for how to re-enable
    either one. */
 const INFO_PAGE_NAV = {
-  architecture: { prev: "title", next: "segments" }
+  // architecture: { prev: "title", next: "segments" },  // hidden — re-enable to restore Energy Management page
   // ecostruxure: { prev: "architecture", next: "segments" },
   // whatfor:     { prev: "ecostruxure",  next: "segments" }
 };
@@ -902,12 +902,10 @@ Object.entries(SEGMENT_PAGE_BACK_BUTTONS).forEach(([btnId, slideName]) => {
   if (el) el.addEventListener("click", () => goToSlide(slideName));
 });
 
-/* Segments' Previous mirrors the Architecture page's Next button
-   (Title -> Architecture -> Segments; "EcoStruxure" and "What for?" are
-   both disabled, see INFO_PAGE_NAV above). The segment detail pages don't
-   get one: they're sibling pages reached via a hotspot, not a linear
-   sequence, and already have a "Back to Segments" button. */
-document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("architecture"));
+/* Segments' Previous goes directly to Title (Architecture/Energy Management page is hidden).
+   The segment detail pages don't get one: they're sibling pages reached via a hotspot,
+   not a linear sequence, and already have a "Back to Segments" button. */
+document.getElementById("prevFromSegments").addEventListener("click", () => goToSlide("title"));
 
 document.querySelectorAll(".hotspot").forEach(h => {
   h.addEventListener("click", e => {

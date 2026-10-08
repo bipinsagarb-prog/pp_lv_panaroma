@@ -649,23 +649,44 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 }
 .hotspot__label {
   position: absolute;
+  left: 50%;
   top: calc(100% + 4px);
-  max-width: 100%;
+  transform: translateX(-50%);
+  width: max-content;
   white-space: nowrap;
-  font-size: .5rem;
+  font-size: .46rem;
   font-weight: 700;
   letter-spacing: .03em;
   color: var(--slate-900);
   background: var(--se-green-bright);
-  padding: .14rem .4rem;
+  padding: .12rem .35rem;
   border-radius: 999px;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity var(--t-fast), transform var(--t-fast);
+  opacity: 1;
   pointer-events: none;
+  z-index: 4;
 }
-.hotspot:hover .hotspot__label,
-.hotspot:focus-visible .hotspot__label { opacity: 1; transform: translateY(0); }
+/* Positioning modifiers — applied per-hotspot (via class, see index.html) to
+   keep labels inside the switchboard silhouette and clear of neighbors in
+   dense clusters, instead of always centering below the ring. */
+.hotspot--label-above .hotspot__label {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+/* Anchor to the ring's exact center (left:50%, same as the default) and only
+   change the translateX, so the label's edge — not the wider invisible
+   button box — lines up with the dot regardless of button width. */
+.hotspot--label-left .hotspot__label {
+  transform: translateX(0);
+}
+.hotspot--label-right .hotspot__label {
+  transform: translateX(-100%);
+}
+.hotspot--label-wrap .hotspot__label {
+  width: 74px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.2;
+}
 
 /* While zoomed, fade non-target hotspots */
 .stage.is-zoomed .hotspot { opacity: .15; pointer-events: none; transition: opacity .4s; }
